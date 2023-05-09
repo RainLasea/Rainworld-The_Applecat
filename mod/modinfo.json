@@ -1,9 +1,9 @@
-﻿{
+{
 	"id": "applecat",
 	"name": "The AppleCat",
-	"version": "0.1.1",
+	"version": "0.2.0",
 	"authors": "AbyssLasea",
-	"description": "An applecat that can only carry out photosynthesis",
+	"description": "An applecat that survives on photosynthesis alone, with a physics-driven sprout growing on its head.",
 	"requirements": [ "slime-cubed.slugbase" ],
 	"requirements_names": [ "SlugBase" ]
 }

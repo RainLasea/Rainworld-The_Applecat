@@ -1,63 +1,92 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-    
-    <PropertyGroup>
-        <TargetFramework>net48</TargetFramework>
-        <LangVersion>11</LangVersion>
-    </PropertyGroup>
-    
-    <ItemGroup>
-      <Compile Remove="appleleaf.cs" />
-    </ItemGroup>
-    
-    <ItemGroup>
-        <Reference Include="..\lib\Assembly-CSharp-firstpass.dll">
-          <Private>false</Private>
-        </Reference>
-        <Reference Include="..\lib\BepInEx.dll">
-          <Private>false</Private>
-        </Reference>
-        <Reference Include="..\lib\Mono.Cecil.dll">
-          <Private>false</Private>
-        </Reference>
-        <Reference Include="..\lib\Mono.Cecil.Rocks.dll">
-          <Private>false</Private>
-        </Reference>
-        <Reference Include="..\lib\MonoMod.dll">
-          <Private>false</Private>
-        </Reference>
-        <Reference Include="..\lib\MonoMod.RuntimeDetour.dll">
-          <Private>false</Private>
-        </Reference>
-        <Reference Include="..\lib\MonoMod.Utils.dll">
-          <Private>false</Private>
-        </Reference>
-        <Reference Include="..\lib\PUBLIC-Assembly-CSharp.dll">
-          <Private>false</Private>
-        </Reference>
-        <Reference Include="..\lib\SlugBase.dll">
-          <Private>false</Private>
-        </Reference>
-        <Reference Include="..\lib\UnityEngine.CoreModule.dll">
-          <Private>false</Private>
-        </Reference>
-        <Reference Include="..\lib\UnityEngine.dll">
-          <Private>false</Private>
-        </Reference>
-        <Reference Include="HOOKS-Assembly-CSharp">
-          <HintPath>D:\SteamLibrary\steamapps\common\Rain World\BepInEx\plugins\HOOKS-Assembly-CSharp.dll</HintPath>
-        </Reference>
-    </ItemGroup>
-    
-    <Target Name="GenerateMod" AfterTargets="PostBuildEvent">
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net48</TargetFramework>
+		<LangVersion>11</LangVersion>
+		<AssemblyName>applecat</AssemblyName>
+		<RootNamespace>applecat</RootNamespace>
+		<Nullable>disable</Nullable>
+		<NoWarn>$(NoWarn);MSB3277;CS0436</NoWarn>
+		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+		<GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+		<Version>0.2.0</Version>
+		<Product>The AppleCat</Product>
+		<DebugType>portable</DebugType>
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<RW_PATH Condition="'$(RW_PATH)' == ''">F:\Steam\steamapps\common\Rain World</RW_PATH>
+		<RW_MANAGED>$(RW_PATH)\RainWorld_Data\Managed</RW_MANAGED>
+		<RW_BEPINEX>$(RW_PATH)\BepInEx</RW_BEPINEX>
+		<RW_WORKSHOP>$(RW_PATH)\..\..\workshop\content\312520</RW_WORKSHOP>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<Reference Include="PUBLIC-Assembly-CSharp">
+			<HintPath Condition="Exists('$(RW_BEPINEX)\utils\PUBLIC-Assembly-CSharp.dll')">$(RW_BEPINEX)\utils\PUBLIC-Assembly-CSharp.dll</HintPath>
+			<HintPath Condition="!Exists('$(RW_BEPINEX)\utils\PUBLIC-Assembly-CSharp.dll')">$(RW_MANAGED)\Assembly-CSharp.dll</HintPath>
+			<Private>false</Private>
+		</Reference>
+		<Reference Include="Assembly-CSharp-firstpass">
+			<HintPath>$(RW_MANAGED)\Assembly-CSharp-firstpass.dll</HintPath>
+			<Private>false</Private>
+		</Reference>
+		<Reference Include="UnityEngine">
+			<HintPath>$(RW_MANAGED)\UnityEngine.dll</HintPath>
+			<Private>false</Private>
+		</Reference>
+		<Reference Include="UnityEngine.CoreModule">
+			<HintPath>$(RW_MANAGED)\UnityEngine.CoreModule.dll</HintPath>
+			<Private>false</Private>
+		</Reference>
+		<Reference Include="BepInEx">
+			<HintPath>$(RW_BEPINEX)\core\BepInEx.dll</HintPath>
+			<Private>false</Private>
+		</Reference>
+		<Reference Include="HOOKS-Assembly-CSharp">
+			<HintPath>$(RW_BEPINEX)\plugins\HOOKS-Assembly-CSharp.dll</HintPath>
+			<Private>false</Private>
+		</Reference>
+		<Reference Include="MonoMod.RuntimeDetour">
+			<HintPath>$(RW_MANAGED)\MonoMod.RuntimeDetour.dll</HintPath>
+			<Private>false</Private>
+		</Reference>
+		<Reference Include="MonoMod.Utils">
+			<HintPath>$(RW_MANAGED)\MonoMod.Utils.dll</HintPath>
+			<Private>false</Private>
+		</Reference>
+	</ItemGroup>
+
+	<ItemGroup Condition="Exists('$(RW_BEPINEX)\plugins\SlugBase.dll')">
+		<Reference Include="SlugBase">
+			<HintPath>$(RW_BEPINEX)\plugins\SlugBase.dll</HintPath>
+			<Private>false</Private>
+		</Reference>
+	</ItemGroup>
+
+	<ItemGroup Condition="!Exists('$(RW_BEPINEX)\plugins\SlugBase.dll') AND Exists('$(RW_WORKSHOP)\2933196558\newest\plugins\SlugBase.dll')">
+		<Reference Include="SlugBase">
+			<HintPath>$(RW_WORKSHOP)\2933196558\newest\plugins\SlugBase.dll</HintPath>
+			<Private>false</Private>
+		</Reference>
+	</ItemGroup>
+
+	<ItemGroup Condition="!Exists('$(RW_BEPINEX)\plugins\SlugBase.dll') AND !Exists('$(RW_WORKSHOP)\2933196558\newest\plugins\SlugBase.dll')">
+		<Reference Include="SlugBase">
+			<HintPath>..\lib\SlugBase.dll</HintPath>
+			<Private>false</Private>
+		</Reference>
+	</ItemGroup>
+
+	<Target Name="CopyPluginToMod" AfterTargets="Build" Condition="'$(Configuration)' == 'Debug'">
 		<ItemGroup>
-			<RemovePlugins Include="../mod/plugins/*.dll" />
+			<OldPlugin Include="..\mod\plugins\*.dll" />
+			<NewPlugin Include="$(TargetPath)" />
 		</ItemGroup>
-		<ItemGroup>
-			<CopyPlugins Include="$(TargetPath)" />
-		</ItemGroup>
-		
-        <Delete Files="@(RemovePlugins)" />
-        <Copy SourceFiles="@(CopyPlugins)" DestinationFolder="../mod/plugins/" />
-    </Target>
-    
+
+		<MakeDir Directories="..\mod\plugins" />
+		<Delete Files="@(OldPlugin)" />
+		<Copy SourceFiles="@(NewPlugin)" DestinationFolder="..\mod\plugins" />
+	</Target>
+
 </Project>

@@ -4,8 +4,10 @@
 	"description": "This peculiar creature mimicked plants for photosynthesis and gave up hunting and eating. <LINE>But its journey has not been smooth sailing – there are still countless predators who want to eat it.",
 	"features": {
 		"color": "ff0000",
-		
-		"applecat/discoloration":true,
+
+		"applecat/is_applecat": true,
+		"applecat/discoloration": true,
+		"applecat/sprout": true,
 		"select_menu_scene": "Slugcat_applecat",
 		"select_menu_scene_ascended": "Ghost_applecat",
 		"sleep_scene": "Sleep_applecat",
